@@ -1,100 +1,106 @@
 --[[
-User patch for Cover Browser plugin to hijack and replace status icons drawing with transparent icons
+User patch for Cover Browser plugin to add page count badges for unread books
 ]]--
+local Blitbuffer = require("ffi/blitbuffer")
 
+--========================== [[Edit your preferences here]] ================================
+local page_font_size = 0.9 						-- Adjust from 0 to 1
+local page_text_color = Blitbuffer.COLOR_WHITE 	-- Choose your desired color
+local border_thickness = 2 						-- Adjust from 0 to 5
+local border_corner_radius = 10 				-- Adjust from 0 to 20
+local border_color = Blitbuffer.COLOR_DARK_GRAY	-- Choose your desired color
+local background_color = Blitbuffer.COLOR_GRAY_3-- Choose your desired color
+local move_from_border = 8 						-- Choose how far in the badge should sit
+
+--==========================================================================================
+
+--========================== [[Do not modify this section]] ================================
 local userpatch = require("userpatch")
-local IconWidget = require("ui/widget/iconwidget")
+local logger = require("logger")
+local TextWidget = require("ui/widget/textwidget")
+local FrameContainer = require("ui/widget/container/framecontainer")
+local Font = require("ui/font")
+local Screen = require("device").screen
+local Size = require("ui/size")
 local BD = require("ui/bidi")
 
-local function patchCoverBrowserStatusIcons(plugin)
-    -- Store the original IconWidget.new
-    local originalIconWidgetNew = IconWidget.new
-    
-    -- Override IconWidget.new to automatically add alpha = true for corner marks
-    function IconWidget:new(o)
-        -- Check if this is one of the corner mark icons
-        local corner_icons = {
-            "dogear.reading",
-            "dogear.abandoned", 
-            "dogear.abandoned.rtl",
-            "dogear.complete",
-            "dogear.complete.rtl",
-            "star.white"
-        }
-        
-        -- If it's a corner mark icon, ensure alpha = true
-        for _, icon_name in ipairs(corner_icons) do
-            if o.icon == icon_name then
-                o.alpha = true
-                break
-            end
-        end
-        
-        return originalIconWidgetNew(self, o)
-    end
-	
-	local MosaicMenu = require("mosaicmenu")
+local function patchCoverBrowserPageCount(plugin)
+    -- Grab Cover Grid mode and the individual Cover Grid items
+    local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
     
-    if not MosaicMenuItem then return end
+    if not MosaicMenuItem then
+        logger.err("MosaicMenuItem not found - page count patch may not work correctly")
+        return
+    end
 
-    local originalPaintTo = MosaicMenuItem.paintTo
+    -- Store original MosaicMenuItem paintTo method
+    local originalMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
     
+    -- Override paintTo method to add page count badges
     function MosaicMenuItem:paintTo(bb, x, y)
-       
-        -- Call original paintTo (this will NOT draw status icons now)
-        originalPaintTo(self, bb, x, y)
+        -- First, call the original paintTo method to draw the cover normally
+        originalMosaicMenuItemPaintTo(self, bb, x, y)
         
-        -- Now draw our transparent status icons
-        if self.do_hint_opened and self.been_opened then
-          
-            local target = self[1][1][1]
-            
-            -- Calculate icon size
-            local corner_mark_size = math.floor(math.min(self.width, self.height) / 8)
-            
-            -- Calculate bottom right corner position
-            local ix, iy
-            
-            if BD.mirroredUILayout() then
-                ix = math.floor((self.width - target.dimen.w)/2)
-            else
-                ix = self.width - math.ceil((self.width - target.dimen.w)/2) - corner_mark_size
-            end
-            iy = self.height - math.ceil((self.height - target.dimen.h)/2) - corner_mark_size
-            
-            -- Create and paint the appropriate status icon with transparency
-            local mark
-            
-            if self.status == "abandoned" then
-                mark = IconWidget:new{
-                    icon = BD.mirroredUILayout() and "dogear.abandoned.rtl" or "dogear.abandoned",
-                    width = corner_mark_size,
-                    height = corner_mark_size,
-                    alpha = true,
-                }
-            elseif self.status == "complete" then
-                mark = IconWidget:new{
-                    icon = BD.mirroredUILayout() and "dogear.complete.rtl" or "dogear.complete",
-                    width = corner_mark_size,
-                    height = corner_mark_size,
-                    alpha = true,
-                }
-            else -- reading status or no status
-                mark = IconWidget:new{
-                    icon = "dogear.reading",
-                    rotation_angle = BD.mirroredUILayout() and 270 or 0,
-                    width = corner_mark_size,
-                    height = corner_mark_size,
-                    alpha = true,
-                }
+        -- Get the cover image widget (target) and dimensions
+        local target = self[1][1][1]
+        if not target or not target.dimen then
+            return
+        end
+        
+        -- Using the same corner_mark_size as the original code for consistency
+        local corner_mark_size = Screen:scaleBySize(10)
+        
+        -- ==== ADD page count widget for unread books ====
+        if not self.is_directory and not self.file_deleted and self.status ~= "complete" and not self.been_opened then
+            -- Extract page count from filename
+            local page_count = nil
+            if self.text then
+                page_count = self.text:match("[Pp]%((%d+)%)")
             end
             
-            if mark then
-                mark:paintTo(bb, x + ix, y + iy)
+            if page_count then
+                local page_text = page_count .. " p."
+                local font_size = math.floor(corner_mark_size * page_font_size)
+		
+                local pages_text = TextWidget:new{
+                    text = page_text,
+                    face = Font:getFace("cfont", font_size),
+                    alignment = "left",
+                    fgcolor = page_text_color,
+                    bold = true,
+					padding = 2,
+                }
+                
+                local pages_badge = FrameContainer:new{
+					linesize = Screen:scaleBySize(2),
+                    radius = Screen:scaleBySize(border_corner_radius),
+                    color = border_color,
+                    bordersize = border_thickness,
+                    background = background_color,
+                    padding = Screen:scaleBySize(2),
+                    margin = 0,
+                    pages_text,
+                }
+                
+                -- left edge of the cover content inside the item
+                local cover_left = x + math.floor((self.width - target.dimen.w) / 2)
+				-- bottom edge of the cover content inside the item
+                local cover_bottom = y + self.height - math.floor((self.height - target.dimen.h) / 2)
+                local badge_w, badge_h = pages_badge:getSize().w, pages_badge:getSize().h
+                
+                -- Position near bottom-left
+                local pad = Screen:scaleBySize(move_from_border)
+                local pos_x_badge = cover_left + pad
+                local pos_y_badge = cover_bottom - (pad + badge_h)
+                
+                pages_badge:paintTo(bb, pos_x_badge, pos_y_badge)
             end
         end
     end
+
+    logger.info("Cover Browser page count badge patch applied successfully")
 end
 
-userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserStatusIcons)
+userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserPageCount)
+--======================================================================================
