@@ -20,10 +20,6 @@ This patch adds rounded corners to book covers in mosaic menu view.
 
 Download the icons `rounded.corner.bl.svg`, `rounded.corner.tl.svg`, `rounded.corner.br.svg` and `rounded.corner.tr.svg` from my icons folder and place the icons in `koreader/icons` in your e-reader.
 
-Currently the rounded corners make the `description hint tag` on the top right side of the book to become detached from the cover due to rounding off.
-
-For now I uncheck the "Show hint for books with description" from ""Settings 🞂 Mosaid and detailed list settings 🞂 Display hints " so it looks clean, I may make a fix for this in the future.
-
 
 ## 🞂 2-faded-finished-books.lua
 
@@ -66,3 +62,12 @@ This patch adds the progress percentage of a book as a badge in the top right co
 Copy the `2-progress-badge.lua` to `koreader/patches` and copy the `progress.badge.svg` to `koreader/icons` folder of your e-reader. You can choose coloured or bw icons based on your device/liking.
 
 **NOTE:** Progress badge's size, location, text size can be adjusted to your liking in the .lua file.
+
+## 🞂 2-series-indicator.lua
+
+<img width="1440" height="285" alt="Screenshot_20251105-111423" src="https://github.com/user-attachments/assets/6d2a812e-2793-474f-8e08-e1a6e731616b" />
+
+This patch adds a small rectangular indicator to the top right of the book cover to mean that the book is part of a series. 
+
+For this to work seamlessly I suggest to uncheck the "Show hint for books with description" from ""Settings 🞂 Mosaid and detailed list settings 🞂 Display hints " so it looks clean.
+
