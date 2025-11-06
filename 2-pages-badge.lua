@@ -4,7 +4,7 @@ User patch for Cover Browser plugin to add page count badges for unread books
 local Blitbuffer = require("ffi/blitbuffer")
 
 --========================== [[Edit your preferences here]] ================================
-local page_font_size = 0.9 						-- Adjust from 0 to 1
+local page_font_size = 0.9						-- Adjust from 0 to 1
 local page_text_color = Blitbuffer.COLOR_WHITE 	-- Choose your desired color
 local border_thickness = 2 						-- Adjust from 0 to 5
 local border_corner_radius = 10 				-- Adjust from 0 to 20
@@ -28,19 +28,14 @@ local function patchCoverBrowserPageCount(plugin)
     -- Grab Cover Grid mode and the individual Cover Grid items
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
-    
-    if not MosaicMenuItem then
-        logger.err("MosaicMenuItem not found - page count patch may not work correctly")
-        return
-    end
 
     -- Store original MosaicMenuItem paintTo method
-    local originalMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
+    local origMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
     
     -- Override paintTo method to add page count badges
     function MosaicMenuItem:paintTo(bb, x, y)
         -- First, call the original paintTo method to draw the cover normally
-        originalMosaicMenuItemPaintTo(self, bb, x, y)
+        origMosaicMenuItemPaintTo(self, bb, x, y)
         
         -- Get the cover image widget (target) and dimensions
         local target = self[1][1][1]
@@ -51,7 +46,7 @@ local function patchCoverBrowserPageCount(plugin)
         -- Using the same corner_mark_size as the original code for consistency
         local corner_mark_size = Screen:scaleBySize(10)
         
-        -- ==== ADD page count widget for unread books ====
+        -- ADD page count widget for unread books
         if not self.is_directory and not self.file_deleted and self.status ~= "complete" and not self.been_opened then
             -- Extract page count from filename
             local page_count = nil
@@ -98,9 +93,5 @@ local function patchCoverBrowserPageCount(plugin)
             end
         end
     end
-
-    logger.info("Cover Browser page count badge patch applied successfully")
 end
-
 userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserPageCount)
---======================================================================================
