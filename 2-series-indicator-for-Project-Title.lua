@@ -1,5 +1,5 @@
 --[[
-Patch to add series indicator to mosaic menu items
+Patch to add series indicator to the right side of the book cover
 ]]--
 local userpatch = require("userpatch")
 local logger = require("logger")
@@ -12,22 +12,17 @@ local BD = require("ui/bidi")
 local Blitbuffer = require("ffi/blitbuffer")
 
 local function patchAddSeriesIndicator(plugin)
-     -- Grab Cover Grid mode and the individual Cover Grid items
+    -- Grab Cover Grid mode and the individual Cover Grid items
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
-    
-    if not MosaicMenuItem then
-        logger.err("MosaicMenuItem not found - page count patch may not work correctly")
-        return
-    end
 
     -- Store the original paintTo method first
-    local originalMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
+    local origMosaicMenuItemPaintTo = MosaicMenuItem.paintTo
 
     -- Override paintTo method
     function MosaicMenuItem:paintTo(bb, x, y)
         -- Call the original paintTo method to draw the cover normally
-        originalMosaicMenuItemPaintTo(self, bb, x, y)
+        origMosaicMenuItemPaintTo(self, bb, x, y)
         
         -- Get the cover image widget (target) and dimensions
         local target = self[1][1][1]
@@ -75,13 +70,10 @@ local function patchAddSeriesIndicator(plugin)
 				-- Move down on y axis
 				local iy = 40 -- was 0
 				
-				-- Set fill color with alpha (gray level 64 out of 255, alpha 160 out of 255)
-				--local teal_color = Blitbuffer:Color(0, 128, 128)
 				bb:paintRect(target.dimen.x + ix, target.dimen.y + iy, d_w, d_h, Blitbuffer.COLOR_GRAY)
 				bb:paintBorder(target.dimen.x + ix, target.dimen.y + iy, d_w, d_h, 1)
 			end
 		end
     end
 end
-
 userpatch.registerPatchPluginFunc("coverbrowser", patchAddSeriesIndicator)
