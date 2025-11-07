@@ -79,5 +79,9 @@ For this to work seamlessly I suggest to uncheck the "Show hint for books with d
 
 This patch adds a clean rounded rectangular progress bar to the bottom of the cover. This disables the default progress bar of Project: Title. 
 
-For this to work as intended, it is suggested to uncheck all options in "Project: Title Settings 🞂 Advanced settings 🞂 Book display 🞂" so they don't clash. 
+For this to work as intended, it is suggested to uncheck all options in "Project: Title Settings 🞂 Advanced settings 🞂 Book display 🞂" so they don't clash.
+
+## 2-collections-star-for-PT.lua
+
+This adds a star in a black circle to left top corner of the book to indicate that the book is part of a collection
 
