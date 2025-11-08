@@ -1,4 +1,4 @@
---[[ User patch for Project Title plugin to replace with new status icons ]]--
+--[[ User patch for KOReader to replace a new set of status icons ]]--
 
 local userpatch = require("userpatch")
 local IconWidget = require("ui/widget/iconwidget")
@@ -96,3 +96,4 @@ local function patchCoverBrowserStatusIcons(plugin)
 end
 
 userpatch.registerPatchPluginFunc("coverbrowser", patchCoverBrowserStatusIcons)
+
