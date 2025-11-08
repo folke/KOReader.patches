@@ -1,8 +1,8 @@
 # KOReader.patches
 
-Some of the patches I created for KOReader (Works with both Coverbrowser and Project: Title plugin).
+Some of the patches I created for KOReader (works with both Coverbrowser and Project: Title plugin).
 
-**NOTE: If you want to use any of this patches first you MUST install the `2--disable-all-CB-widgets.lua` for Coverbrowser or `2--disable-all-PT-widgets.lua` for Project: Title. Otherwise the patches may not work properly.**
+**NOTE: If you want to use any of these patches, first you MUST install the `2--disable-all-CB-widgets.lua` for Coverbrowser or `2--disable-all-PT-widgets.lua` for Project: Title. Otherwise the patches may not work properly.**
 
 All these patches are tested on KOReader 2025.10 "Ghost" and Project: Title v3.5 and works perfectly.
 
@@ -11,7 +11,8 @@ Please [check the guide here.](https://koreader.rocks/user_guide/#L2-userpatches
 
 ## Screenshot of final look
 
-<img width="720" height="990" alt="Overall Look" src="https://github.com/user-attachments/assets/890b7288-31d1-4e44-82d6-399eda54e112" />
+
+<img width="720" height="990" alt="Overall Look" src="https://github.com/user-attachments/assets/e5952980-8bfd-4a3e-bb01-b9032201be01" />
 
 
 ## 🞂 2--disable-all-CB-widgets.lua
