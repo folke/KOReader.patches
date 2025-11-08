@@ -36,12 +36,12 @@ local function patchCoverBrowserStatusIcons(plugin)
     
     if not MosaicMenuItem then return end
 
-    local originalPaintTo = MosaicMenuItem.paintTo
+    local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
     
     function MosaicMenuItem:paintTo(bb, x, y)
        
         -- Call original paintTo (this will NOT draw status icons now)
-        originalPaintTo(self, bb, x, y)
+        orig_MosaicMenuItem_paint(self, bb, x, y)
         
         -- Now draw our transparent status icons
         if self.do_hint_opened and self.been_opened then
