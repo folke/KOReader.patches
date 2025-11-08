@@ -7,7 +7,7 @@ local page_text_color = Blitbuffer.COLOR_WHITE 	-- Choose your desired color
 local border_thickness = 2 						-- Adjust from 0 to 5
 local border_corner_radius = 12 				-- Adjust from 0 to 20
 local border_color = Blitbuffer.COLOR_DARK_GRAY	-- Choose your desired color
-local background_color = Blitbuffer.COLOR_GRAY_3-- Choose your desired color
+local background_color = Blitbuffer.COLOR_GRAY_3 -- Choose your desired color
 local move_from_border = 8 						-- Choose how far in the badge should sit
 
 --==========================================================================================
@@ -60,7 +60,7 @@ local function patchCoverBrowserPageCount(plugin)
             if not page_count then
                 page_count = nil
                 if self.text then
-                    page_count = self.text:match("[Pp]%((%d+)%)")
+                    page_count = self.text:match("[Pp]?%(?[Pp]?(%d+)%)?")
                 end
             end
             
