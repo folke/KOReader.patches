@@ -26,9 +26,6 @@ local function patchDisableUIElements(plugin)
     
     -- Store original methods
     local orig_ImageWidget_paint = ImageWidget.paintTo
-    local orig_FrameContainer_paint = FrameContainer.paintTo
-    local orig_TextWidget_paint = TextWidget.paintTo
-    local plugin_dir = ptutil.getPluginDir()
     
     -- Disable progress-related icons
     ImageWidget.paintTo = function(self, bb, x, y)
