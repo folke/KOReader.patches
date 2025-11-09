@@ -1,4 +1,4 @@
-# KOReader.patches
+# Visual Overhaul Patches (VOP)
 
 Some of the patches I created for KOReader (works with both Coverbrowser and Project: Title plugin).
 
