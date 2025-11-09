@@ -4,6 +4,8 @@ Some of the patches I created for KOReader (works with both Coverbrowser and Pro
 
 **NOTE: If you want to use any of these patches, first you MUST install the `2--disable-all-CB-widgets.lua` for Coverbrowser or `2--disable-all-PT-widgets.lua` for Project: Title. Otherwise the patches may not work properly.**
 
+All the .lua files should go into `koreader/patches` and all the .svg files should go into `koreader/icons` folder of your e-reader.
+
 All these patches are tested on KOReader 2025.10 "Ghost" and Project: Title v3.5 and works perfectly.
 
 ## 🞂 How to install a user patch ?
@@ -19,17 +21,21 @@ Please [check the guide here.](https://koreader.rocks/user_guide/#L2-userpatches
 
 This patch disables all the progress and status related widgets from **COVERBROWSER** such as, progress bar, status icons and collection icons from the book's cover, giving us a clean cover. This helps to draw the new widgets with ease.
 
+You **MUST** install this first if you are using default KOReader interface that is **Coverbrowser** plugin and if you want to use any of the other patches in this repo.
+
 
 ## 🞂 2--disable-all-PT-widgets.lua
 
 This patch disables all the progress and status related widgets from **PROJECT: TITLE** such as, progress bar, percent read, pages read and status icon from the book's cover, giving us a clean cover. This helps to draw the new widgets with ease.
+
+You **MUST** install this first if you are using **Project: Title** plugin and if you want to use any of the other patches in this repo.
 
 
 ## 🞂 2--rounded-corners.lua
 
 <img width="720" height="325" alt="Rounded corners to book covers" src="https://github.com/user-attachments/assets/ed550b96-a4dc-4354-9e91-c38195d9596f" />
 
-This patch adds rounded corners to book covers in mosaic menu view.
+This patch adds rounded corners to book covers in mosaic menu view. 
 
 Download the icons `rounded.corner.bl.svg`, `rounded.corner.tl.svg`, `rounded.corner.br.svg` and `rounded.corner.tr.svg` from my icons folder and place the icons in `koreader/icons` in your e-reader.
 
@@ -74,18 +80,14 @@ Copy the `2-percent-badge.lua` to `koreader/patches` and copy the `percent.badge
 
 <img width="720" height="143" alt="Series indicator" src="https://github.com/user-attachments/assets/6d2a812e-2793-474f-8e08-e1a6e731616b" />
 
-This patch adds a small rectangular indicator to the top right of the book cover to mean that the book is part of a series. 
-
-For this to work seamlessly I suggest to uncheck the "Show hint for books with description" from "Settings 🞂 Mosaic and detailed list settings 🞂 Display hints" so it looks clean.
+This patch adds a small rectangular indicator to the top right of the book cover to mean that the book is part of a series.
 
 
 ## 🞂 2-new-progress-bar.lua
 
 <img width="480" height="150" alt="image" src="https://github.com/user-attachments/assets/8ccd0634-3135-44c9-a939-0cad2957da01" />
 
-This patch adds a clean rounded rectangular progress bar to the bottom of the cover. This disables the default progress bar of Project: Title. 
-
-For this to work as intended, it is suggested to uncheck all options in "Project: Title Settings 🞂 Advanced settings 🞂 Book display 🞂" so they don't clash.
+This patch adds a clean rounded rectangular progress bar to the bottom of the cover. This disables the default progress bar of Project: Title.
 
 
 ## 🞂 2-new-collections-star.lua
