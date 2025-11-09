@@ -43,7 +43,8 @@ local function patchCoverBrowserProgressPercent(plugin)
         local corner_mark_size = Screen:scaleBySize(20)
         
         -- ADD percent badge to top right corner
-        if self.do_hint_opened and self.been_opened and self.percent_finished and self.status ~= "complete" then
+        if (self.do_hint_opened and self.been_opened and self.percent_finished and self.status ~= "complete") or 
+   (self.menu.name == "history" and self.percent_finished and self.status ~= "complete") then
 	
 			-- Parse percent text and store as text widget
 			local percent_text = string.format("%d%%", math.floor(self.percent_finished * 100))
