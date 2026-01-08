@@ -13,37 +13,38 @@ local logger = require("logger")
 local userpatch = require("userpatch")
 
 local function patchDisableUIElements(plugin)
-    local Device = require("device")
-    local Screen = Device.screen
-    local Blitbuffer = require("ffi/blitbuffer")
     local ImageWidget = require("ui/widget/imagewidget")
-    local FrameContainer = require("ui/widget/container/framecontainer")
-    local TextWidget = require("ui/widget/textwidget")
     local ProgressWidget = require("ui/widget/progresswidget")
-    local Size = require("ui/size")
     local MosaicMenu = require("mosaicmenu")
-    local ptutil = require("ptutil")
     local BookInfoManager = require("bookinfomanager")
 
-    -- Store original methods
-    local orig_ImageWidget_paint = ImageWidget.paintTo
+    if not ImageWidget.patched_disable_all_pt_widgets then
+        ImageWidget.patched_disable_all_pt_widgets = true
+        -- Store original methods
+        local orig_ImageWidget_paint = ImageWidget.paintTo
 
-    -- Disable progress-related icons
-    ImageWidget.paintTo = function(self, bb, x, y)
-        if self.file then
-            if
-                self.file:match("/resources/trophy%.svg$")
-                or self.file:match("/resources/pause%.svg$")
-                or self.file:match("/resources/new%.svg$")
-                or self.file:match("/resources/large_book%.svg$")
-            then
-                return
+        -- Disable progress-related icons
+        ImageWidget.paintTo = function(self, bb, x, y)
+            if self.file then
+                if
+                    self.file:match("/resources/trophy%.svg$")
+                    or self.file:match("/resources/pause%.svg$")
+                    or self.file:match("/resources/new%.svg$")
+                    or self.file:match("/resources/large_book%.svg$")
+                then
+                    return
+                end
             end
+            return orig_ImageWidget_paint(self, bb, x, y)
         end
-        return orig_ImageWidget_paint(self, bb, x, y)
     end
 
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+
+    if MosaicMenuItem.patched_disable_all_pt_widgets then
+        return
+    end
+    MosaicMenuItem.patched_disable_all_pt_widgets = true
 
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
 

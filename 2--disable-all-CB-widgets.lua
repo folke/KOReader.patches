@@ -18,6 +18,11 @@ local function patchDisableUIElements(plugin)
     -- Disable progress bar, collection star, and description hint
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
 
+    if MosaicMenuItem.patched_disable_all_cb_widgets then
+        return
+    end
+    MosaicMenuItem.patched_disable_all_cb_widgets = true
+
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
 
     function MosaicMenuItem:paintTo(bb, x, y)

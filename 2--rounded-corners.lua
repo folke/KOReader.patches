@@ -11,6 +11,11 @@ local function patchBookCoverRoundedCorners(plugin)
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
 
+    if MosaicMenuItem.patched_rounded_corners then
+        return
+    end
+    MosaicMenuItem.patched_rounded_corners = true
+
     -- Load as IconWidget
     local function svg_widget(icon)
         return IconWidget:new({ icon = icon, alpha = true })

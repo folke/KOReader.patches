@@ -1,13 +1,10 @@
 --[[ User patch for KOReader to add custom rounded progress bar ]]
 --
 
-local logger = require("logger")
 local userpatch = require("userpatch")
 local Screen = require("device").screen
 local Blitbuffer = require("ffi/blitbuffer")
-local FrameContainer = require("ui/widget/container/framecontainer")
-local ImageWidget = require("ui/widget/imagewidget")
-local ProgressWidget = require("ui/widget/progresswidget")
+local logger = require("logger")
 
 -- stylua: ignore start
 --========================== Edit your preferences here ================================
@@ -28,6 +25,11 @@ local BORDER_COLOR = Blitbuffer.COLOR_BLACK                   -- border color
 local function patchCustomProgress(plugin)
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+
+    if MosaicMenuItem.patched_new_progress_bar then
+        return
+    end
+    MosaicMenuItem.patched_new_progress_bar = true
 
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
 

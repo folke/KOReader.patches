@@ -18,16 +18,19 @@ local move_from_border = 8                       -- Choose how far in the badge 
 local Font = require("ui/font")
 local FrameContainer = require("ui/widget/container/framecontainer")
 local TextWidget = require("ui/widget/textwidget")
-local logger = require("logger")
 local userpatch = require("userpatch")
 local Screen = require("device").screen
-local BD = require("ui/bidi")
-local Size = require("ui/size")
+local logger = require("logger")
 
 local function patchCoverBrowserPageCount(plugin)
     -- Grab Cover Grid mode and the individual Cover Grid items
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+
+    if MosaicMenuItem.patched_pages_badge then
+        return
+    end
+    MosaicMenuItem.patched_pages_badge = true
 
     -- Store original MosaicMenuItem paintTo method
     local origMosaicMenuItemPaintTo = MosaicMenuItem.paintTo

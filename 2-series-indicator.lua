@@ -1,19 +1,20 @@
 --[[ Patch for KOReader to add series indicator to the right side of the book cover ]]
 --
-local Font = require("ui/font")
-local FrameContainer = require("ui/widget/container/framecontainer")
-local TextWidget = require("ui/widget/textwidget")
-local logger = require("logger")
 local userpatch = require("userpatch")
 local Screen = require("device").screen
 local BD = require("ui/bidi")
 local Blitbuffer = require("ffi/blitbuffer")
-local Size = require("ui/size")
+local logger = require("logger")
 
 local function patchAddSeriesIndicator(plugin)
     -- Grab Cover Grid mode and the individual Cover Grid items
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
+
+    if MosaicMenuItem.patched_series_indicator then
+        return
+    end
+    MosaicMenuItem.patched_series_indicator = true
 
     -- Store the original paintTo method first
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo

@@ -14,6 +14,11 @@ local function patchCoverBrowserFaded(plugin)
     local MosaicMenu = require("mosaicmenu")
     local MosaicMenuItem = userpatch.getUpValue(MosaicMenu._updateItemsBuildUI, "MosaicMenuItem")
 
+    if MosaicMenuItem.patched_faded_finished then
+        return
+    end
+    MosaicMenuItem.patched_faded_finished = true
+
     -- Store original MosaicMenuItem paintTo method
     local orig_MosaicMenuItem_paint = MosaicMenuItem.paintTo
 
